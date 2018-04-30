@@ -1,0 +1,8 @@
+node_modules/
+build/
+.vscode/
+src/demos/node-server/subscription-store.db
+src/images/png-version/
+npm-debug.log
+token.txt
+fir-sevice-acc.json
