@@ -20,6 +20,39 @@ messaging.requestPermission()
     }).catch(function(err) {
         console.log('Unable to get permission to notify.', err);
     });
+
+$("form[name='sendNotification']").submit(function(e){
+    e.preventDefault();
+    let title = $("[name='title']").val();
+    let description = $("[name='description']").val();
+    $.ajax({
+        type:"POST",
+        url:"https://fcm.googleapis.com/fcm/send",
+        dataType:"json",
+        contentType:"application/json",
+        headers:{
+            "Authorization": "key= AAAA4uqYCxM:APA91bF7LEuHwG5-2obu_GJsJbMx0vtl_y-1ILsFGT8Isjpa1MQNykQ7YtICMKvDvzezzVnSbiB2POYqVJyqC9IZ7TDVCfXrniNnei8N3LcFzpsI2wrafPB2lHSUB9a0kqznK-E9GUdU"
+        },
+        data:JSON.stringify({
+            "to":"dq475XSZFhI:APA91bEfhtXgFMUn0ZD8UUrwOBZmaUb1e85Zr3pAf8-yH7_OoNhT0-30nR0acm0HUUiZPAWmQ1DWXoi77TLbeXORwB5eoq8BHIp2SchIEVSZiGHDTJ2i_uDvcJYcw2ldd5UTr4mThacw",
+            "notification": {
+                "title": title,
+                "body": description,
+                "icon": "/public/images/img_557022.png"
+            }
+        }),
+        success:function(data){
+            console.log(data);
+        },
+        error: function(err){
+            console.log(err);
+        }
+    });
+});
+
+messaging.onMessage(function(payload){
+    console.log('onMessage', payload);
+});
       
 retrieveToken = () => {
     messaging.getToken().then(function(currentToken) {

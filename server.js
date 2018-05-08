@@ -1,14 +1,27 @@
 var express = require('express'),
     bodyParser = require('body-parser'),
     fs = require('fs'),
-    request = require('request');
+    request = require('request'),
+    exphbs = require('express-handlebars');
 
 var app = express();
 //var urlencodedParser = bodyParser.urlencoded({extended: false});
 var jsonParser = bodyParser.json();
 
-app.use(express.static(__dirname, {extensions: ['html']}));
+app.use(express.static(__dirname + '/public'));
+app.set("view engine", "hbs");
+app.set("views", __dirname+"\\public\\views");
 
+const hbs = exphbs.create({
+    extname      :'hbs',
+    layoutsDir   : __dirname+"\\public\\views\\layouts",
+    defaultLayout: 'main',
+    partialsDir  : __dirname+"\\public\\views\\partials"
+});
+
+app.get("/", function(request, response){
+    response.render("index.hbs");
+});
 
 app.post("/subscribe", jsonParser, function (request, response) {
     if(!request.body) return response.sendStatus(400);
