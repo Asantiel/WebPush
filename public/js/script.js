@@ -46,7 +46,7 @@ messaging.onMessage(function(payload){
     console.log('onMessage', payload);
 });
       
-retrieveToken = () => {
+retrieveToken = (id) => {
     messaging.requestPermission()
     .then(function() {
         console.log('Notification permission granted.');
@@ -56,7 +56,7 @@ retrieveToken = () => {
 
     messaging.getToken().then(function(currentToken) {
         if (currentToken) {
-            sendTokenToServer(currentToken);
+            sendTokenToServer(currentToken, id);
         } else {
             console.log('No Instance ID token available. Request permission to generate one.');
             alert('Пожалуйста, разрешите отправлять вам уведомления');
@@ -68,18 +68,18 @@ retrieveToken = () => {
     });
 };
   
-function sendTokenToServer(currentToken) {
+function sendTokenToServer(currentToken, id) {
     console.log('Sending token to server...');
     $.ajax({
         type: "POST",
         url: "/subscribe",
-        data: JSON.stringify({AppInstanceToken: currentToken}),
+        data: JSON.stringify({AppInstanceToken: currentToken, subscribeId: id}),
         dataType: "json",
         contentType: "application/json",
         success: function(data){ 
             console.log(data);
         },
-        error: function(err){ 
+        error: function(err){
             console.log(err);
         }
     });

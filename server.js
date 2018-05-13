@@ -31,37 +31,38 @@ app.get("/admin", function(request, response){
 });
 
 app.post("/subscribe", jsonParser, function (request, response) {
-    if(!request.body) return response.sendStatus(400);
+    if(!request.body) {
+        return response.sendStatus(400);
+    }
     MongoClient.connect("mongodb://localhost:27017/test", function(err, db){
         if(err){
             return console.log(err);
         }
         // взаимодействие с базой данных
-        var collection = db.collection("devices");
-        var device = {token:request.body.AppInstanceToken};
-        collection.insertOne(device, function(err, result){
-            if(err){ 
-                return console.log(err);
+        let collection = db.collection("devices");
+        let device = {token:request.body.AppInstanceToken, id: request.body.subscribeId};
+        collection.find(device).toArray()
+        .then(function(results){
+            if(results.length>1){
+                collection.deleteMany(device, function(err, result){
+                    if(err){
+                        console.log(err);
+                    }
+                    db.close();
+                });
+            } else if (results.length>0) {
+                db.close();
+            } else {
+                collection.insertOne(device, function(err, result){
+                    if(err){ 
+                        return console.log(err);
+                    }
+                    console.log(result.ops);
+                    db.close();
+                });
             }
-            console.log(result.ops);
-        });
-
-        collection.find().toArray(function(err, results){
-            console.log(results);
-        });
-
-        collection.deleteMany({token:request.body.AppInstanceToken}, function(err, result){
-            console.log(result);
-            db.close();
         });
     });
-    fs.writeFile("token.txt", request.body.AppInstanceToken, function(err){
-        if (err){
-            console.log(error);
-        }
-        return request.body.AppInstanceToken;
-    });
-    response.sendStatus(200);
 });
 
 app.post("/send", jsonParser, function(request, response){
