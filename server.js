@@ -19,8 +19,14 @@ const hbs = exphbs.create({
     partialsDir  : __dirname+"\\public\\views\\partials"
 });
 
+app.engine('hbs', hbs.engine);
+
 app.get("/", function(request, response){
-    response.render("index.hbs");
+    response.render('index');
+});
+
+app.get("/admin", function(request, response){
+    response.render('admin');
 });
 
 app.post("/subscribe", jsonParser, function (request, response) {
@@ -60,7 +66,9 @@ app.post("/send", jsonParser, function(request, response){
     });
 });
 
-app.listen(3000);
+app.listen(3000, function(){
+    console.log('Server listening on: 3000');
+});
 
 function getAccessToken() {
     return new Promise(function(resolve, reject) {
@@ -79,5 +87,5 @@ function getAccessToken() {
             }
             resolve(tokens.access_token);
         });
-        });
+    });
   }

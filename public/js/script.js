@@ -24,7 +24,7 @@ messaging.requestPermission()
 $("form[name='sendNotification']").submit(function(e){
     e.preventDefault();
     let title = $("[name='title']").val();
-    let description = $("[name='description']").val();
+    let description = $("#description").val();
     $.ajax({
         type:"POST",
         url:"https://fcm.googleapis.com/fcm/send",
@@ -38,7 +38,7 @@ $("form[name='sendNotification']").submit(function(e){
             "notification": {
                 "title": title,
                 "body": description,
-                "icon": "/public/images/img_557022.png"
+                "icon": "images/img_557022.png"
             }
         }),
         success:function(data){
