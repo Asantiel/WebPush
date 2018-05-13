@@ -1,5 +1,7 @@
 // Callback fired if Instance ID token is updated.
 const messaging = firebase.messaging();
+messaging.usePublicVapidKey("BNnWxEZztbbtTN04VtO70CrtxJYeRdbruzeyitTymn8VYS5-JJAU65A9TJ-XH2EuhbvOy9KaDN1SNGrPskGY-Wo");
+
 messaging.onTokenRefresh(function() {
     messaging.getToken().then(function(refreshedToken) {
         console.log('Token refreshed.');
@@ -10,16 +12,6 @@ messaging.onTokenRefresh(function() {
         showToken('Unable to retrieve refreshed token ', err);
     });
 });
-  
-
-messaging.usePublicVapidKey("BNnWxEZztbbtTN04VtO70CrtxJYeRdbruzeyitTymn8VYS5-JJAU65A9TJ-XH2EuhbvOy9KaDN1SNGrPskGY-Wo");
-messaging.requestPermission()
-    .then(function() {
-        console.log('Notification permission granted.');
-        retrieveToken();
-    }).catch(function(err) {
-        console.log('Unable to get permission to notify.', err);
-    });
 
 $("form[name='sendNotification']").submit(function(e){
     e.preventDefault();
@@ -34,7 +26,7 @@ $("form[name='sendNotification']").submit(function(e){
             "Authorization": "key= AAAA4uqYCxM:APA91bF7LEuHwG5-2obu_GJsJbMx0vtl_y-1ILsFGT8Isjpa1MQNykQ7YtICMKvDvzezzVnSbiB2POYqVJyqC9IZ7TDVCfXrniNnei8N3LcFzpsI2wrafPB2lHSUB9a0kqznK-E9GUdU"
         },
         data:JSON.stringify({
-            "to":"dq475XSZFhI:APA91bEfhtXgFMUn0ZD8UUrwOBZmaUb1e85Zr3pAf8-yH7_OoNhT0-30nR0acm0HUUiZPAWmQ1DWXoi77TLbeXORwB5eoq8BHIp2SchIEVSZiGHDTJ2i_uDvcJYcw2ldd5UTr4mThacw",
+            "to":"eeQqM0qvJuo:APA91bES_ilvxw03-5-2p3HJR2VNeETlniRt_voVHFgyX58OqYLABLtJFRJUSE1Zqb4Q0fGZsaJwIBFSrC5YVYRTdiZ7Jm4rNXIt5CiV7cxfbnVw1HBRq3X3FginprF0eDWDwrRVRRb_",
             "notification": {
                 "title": title,
                 "body": description,
@@ -55,11 +47,19 @@ messaging.onMessage(function(payload){
 });
       
 retrieveToken = () => {
+    messaging.requestPermission()
+    .then(function() {
+        console.log('Notification permission granted.');
+    }).catch(function(err) {
+        console.log('Unable to get permission to notify.', err);
+    });
+
     messaging.getToken().then(function(currentToken) {
         if (currentToken) {
             sendTokenToServer(currentToken);
         } else {
             console.log('No Instance ID token available. Request permission to generate one.');
+            alert('Пожалуйста, разрешите отправлять вам уведомления');
             setTokenSentToServer(false);
         }
     }).catch(function(err) {
@@ -69,26 +69,21 @@ retrieveToken = () => {
 };
   
 function sendTokenToServer(currentToken) {
-    if (!isTokenSentToServer()) {
-        console.log('Sending token to server...');
-        $.ajax({
-            type: "POST",
-            url: "/subscribe",
-            data: JSON.stringify({AppInstanceToken: currentToken}),
-            dataType: "json",
-            contentType: "application/json",
-            success: function(data){ 
-                console.log(data);
-            },
-            error: function(err){ 
-                console.log(err);
-            }
-        });
-        setTokenSentToServer(true);
-    } else {
-        console.log('Token already sent to server so won\'t send it again ' +
-            'unless it changes');
-    }
+    console.log('Sending token to server...');
+    $.ajax({
+        type: "POST",
+        url: "/subscribe",
+        data: JSON.stringify({AppInstanceToken: currentToken}),
+        dataType: "json",
+        contentType: "application/json",
+        success: function(data){ 
+            console.log(data);
+        },
+        error: function(err){ 
+            console.log(err);
+        }
+    });
+    setTokenSentToServer(true);
 }
   
 function setTokenSentToServer(sent) {
@@ -96,5 +91,5 @@ function setTokenSentToServer(sent) {
 }
 
 function isTokenSentToServer() {
-    return window.localStorage.getItem('sentToServer') === 1;
+    return window.localStorage.getItem('sentToServer') == 1;
 }

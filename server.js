@@ -2,7 +2,8 @@ var express = require('express'),
     bodyParser = require('body-parser'),
     fs = require('fs'),
     request = require('request'),
-    exphbs = require('express-handlebars');
+    exphbs = require('express-handlebars'),
+    MongoClient = require("mongodb").MongoClient;
 
 var app = express();
 //var urlencodedParser = bodyParser.urlencoded({extended: false});
@@ -31,14 +32,35 @@ app.get("/admin", function(request, response){
 
 app.post("/subscribe", jsonParser, function (request, response) {
     if(!request.body) return response.sendStatus(400);
-    console.log(request.body);
+    MongoClient.connect("mongodb://localhost:27017/test", function(err, db){
+        if(err){
+            return console.log(err);
+        }
+        // взаимодействие с базой данных
+        var collection = db.collection("devices");
+        var device = {token:request.body.AppInstanceToken};
+        collection.insertOne(device, function(err, result){
+            if(err){ 
+                return console.log(err);
+            }
+            console.log(result.ops);
+        });
+
+        collection.find().toArray(function(err, results){
+            console.log(results);
+        });
+
+        collection.deleteMany({token:request.body.AppInstanceToken}, function(err, result){
+            console.log(result);
+            db.close();
+        });
+    });
     fs.writeFile("token.txt", request.body.AppInstanceToken, function(err){
         if (err){
             console.log(error);
         }
         return request.body.AppInstanceToken;
     });
-    //response.send(`${request.body.title} - ${request.body.description}`);
     response.sendStatus(200);
 });
 
