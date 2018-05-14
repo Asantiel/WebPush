@@ -48,7 +48,14 @@ app.post("/subscribe", jsonParser, function (request, response) {
                     if(err){
                         console.log(err);
                     }
-                    db.close();
+                    //тупо, но работает
+                    collection.insertOne(device, function(err, result){
+                        if(err){ 
+                            return console.log(err);
+                        }
+                        console.log(result.ops);
+                        db.close();
+                    });
                 });
             } else if (results.length>0) {
                 db.close();
@@ -65,50 +72,41 @@ app.post("/subscribe", jsonParser, function (request, response) {
     });
 });
 
-app.post("/send", jsonParser, function(request, response){
-    if(!request.body) return response.sendStatus(400);
-    console.log(request.body);
-    let serverKey = getAccessToken();
-    let clientToken= fs.readFileSync("token.txt", "utf8");
-    let options = {
-        url: 'https://fcm.googleapis.com/fcm/send',
-        headers:{
-            'Autorization': 'key='+serverKey,
-        },
-        json:{
-            'to':clientToken,
-            'data':{
-                'title':'Hello мир'
-            }
-        }
-    };
-    request.post(options, function optionCallback(err, httpResponse, body){
+app.post("/deleteToken", jsonParser, function(request, response){
+    if(!request.body) {
+        return response.sendStatus(400);
+    }
+    let message;
+    MongoClient.connect("mongodb://localhost:27017/test", function(err, db){
         if(err){
-            return console.error('ERROR - FIREBASE POST failed:', err);
+            return console.log(err);
         }
+        // взаимодействие с базой данных
+        let collection = db.collection("devices");
+        let device = {token:request.body.AppInstanceToken, id: request.body.subscribeId};
+        collection.find(device).toArray()
+        .then(function(results){
+            if (results.length == 0) {
+                message = "У вас не было подписки на эту тему!";
+                response.json(message);
+                db.close();
+            }
+            else {
+                collection.deleteMany(device, function(err, result){
+                    if (err){
+                        console.log(err);
+                    }
+                    message = "Подписка была удалена!";
+                    response.json(message);
+                    db.close();
+                });
+            }
+        });
     });
 });
+
+app.post("/send", jsonParser, function(request, response){});
 
 app.listen(3000, function(){
     console.log('Server listening on: 3000');
 });
-
-function getAccessToken() {
-    return new Promise(function(resolve, reject) {
-        var key = require('./service-account.json');
-        var jwtClient = new google.auth.JWT(
-            key.client_email,
-            null,
-            key.private_key,
-            SCOPES,
-            null
-        );
-        jwtClient.authorize(function(err, tokens) {
-            if (err) {
-            reject(err);
-            return;
-            }
-            resolve(tokens.access_token);
-        });
-    });
-  }

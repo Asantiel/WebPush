@@ -13,7 +13,7 @@ messaging.onTokenRefresh(function() {
     });
 });
 
-$("form[name='sendNotification']").submit(function(e){
+$("#sendNotification").submit(function(e){
     e.preventDefault();
     let title = $("[name='title']").val();
     let description = $("#description").val();
@@ -26,7 +26,7 @@ $("form[name='sendNotification']").submit(function(e){
             "Authorization": "key= AAAA4uqYCxM:APA91bF7LEuHwG5-2obu_GJsJbMx0vtl_y-1ILsFGT8Isjpa1MQNykQ7YtICMKvDvzezzVnSbiB2POYqVJyqC9IZ7TDVCfXrniNnei8N3LcFzpsI2wrafPB2lHSUB9a0kqznK-E9GUdU"
         },
         data:JSON.stringify({
-            "to":"eeQqM0qvJuo:APA91bES_ilvxw03-5-2p3HJR2VNeETlniRt_voVHFgyX58OqYLABLtJFRJUSE1Zqb4Q0fGZsaJwIBFSrC5YVYRTdiZ7Jm4rNXIt5CiV7cxfbnVw1HBRq3X3FginprF0eDWDwrRVRRb_",
+            "to":"dq475XSZFhI:APA91bEfhtXgFMUn0ZD8UUrwOBZmaUb1e85Zr3pAf8-yH7_OoNhT0-30nR0acm0HUUiZPAWmQ1DWXoi77TLbeXORwB5eoq8BHIp2SchIEVSZiGHDTJ2i_uDvcJYcw2ldd5UTr4mThacw",
             "notification": {
                 "title": title,
                 "body": description,
@@ -56,7 +56,8 @@ retrieveToken = (id) => {
 
     messaging.getToken().then(function(currentToken) {
         if (currentToken) {
-            sendTokenToServer(currentToken, id);
+            id = id.replace('Subscribe_', '');
+            sendTokenToServer(currentToken, id, false);
         } else {
             console.log('No Instance ID token available. Request permission to generate one.');
             alert('Пожалуйста, разрешите отправлять вам уведомления');
@@ -67,17 +68,36 @@ retrieveToken = (id) => {
         setTokenSentToServer(false);
     });
 };
+
+deleteToken = (id) => {
+    messaging.getToken().then(function(currentToken) {
+        if (currentToken) {
+            id = id.replace('Unsubscribe_', '');
+            sendTokenToServer(currentToken, id, true);
+        } else {
+            console.log('No Instance ID token available. Request permission to generate one.');
+            alert('Пожалуйста, разрешите отправлять вам уведомления');
+            setTokenSentToServer(false);
+        }
+    }).catch(function(err) {
+        console.log('An error occurred while retrieving token. ', err);
+        setTokenSentToServer(false);
+    });
+}
   
-function sendTokenToServer(currentToken, id) {
+function sendTokenToServer(currentToken, id, forDelete) {
     console.log('Sending token to server...');
     $.ajax({
         type: "POST",
-        url: "/subscribe",
+        url: forDelete?"/deleteToken":"/subscribe",
         data: JSON.stringify({AppInstanceToken: currentToken, subscribeId: id}),
         dataType: "json",
         contentType: "application/json",
         success: function(data){ 
             console.log(data);
+            if(forDelete){
+                $("#accordion").prepend("<p>"+data+"</p>");
+            }
         },
         error: function(err){
             console.log(err);

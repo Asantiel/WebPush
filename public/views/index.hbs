@@ -2,6 +2,7 @@
     <div class="row">
         <div class="col-lg-12 col-md-12">
         <div id="accordion">
+
             <div class="card">
               <div class="card-header" id="headingOne">
                 <h5 class="mb-0">
@@ -9,15 +10,16 @@
                     Collapsible Group Item #1
                   </button>
                   <input type="button" value="Subscribe" class="btn btn-primary" id="Subscribe_d5afc4de-fe82-4d40-bc49-25b976d71f1a" onclick="retrieveToken(this.id)">
+                  <input type="button" value="Unsubscribe" class="btn btn-outline-danger" id="Unsubscribe_d5afc4de-fe82-4d40-bc49-25b976d71f1a" onclick="deleteToken(this.id)">
                 </h5>
               </div>
-          
               <div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-parent="#accordion">
                 <div class="card-body">
                     Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident. Ad vegan excepteur butcher vice lomo. Leggings occaecat craft beer farm-to-table, raw denim aesthetic synth nesciunt you probably haven't heard of them accusamus labore sustainable VHS.    
                 </div>
               </div>
             </div>
+
             <div class="card">
               <div class="card-header" id="headingTwo">
                 <h5 class="mb-0">
@@ -25,6 +27,7 @@
                     Collapsible Group Item #2
                   </button>
                   <input type="button" value="Subscribe" class="btn btn-primary" id="Subscribe_4dc1234a-bb04-463a-b2fa-29f851656f6a" onclick="retrieveToken(this.id)">
+                  <input type="button" value="Unsubscribe" class="btn btn-outline-danger" id="Unsubscribe_4dc1234a-bb04-463a-b2fa-29f851656f6a" onclick="deleteToken(this.id)">
                 </h5>
               </div>
               <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordion">
@@ -33,6 +36,7 @@
                 </div>
               </div>
             </div>
+
             <div class="card">
               <div class="card-header" id="headingThree">
                 <h5 class="mb-0">
@@ -40,6 +44,7 @@
                     Collapsible Group Item #3
                   </button>
                   <input type="button" value="Subscribe" class="btn btn-primary" id="Subscribe_02299ccb-ff87-4976-99ee-95161b935f48" onclick="retrieveToken(this.id)">
+                  <input type="button" value="Unsubscribe" class="btn btn-outline-danger" id="Unsubscribe_02299ccb-ff87-4976-99ee-95161b935f48" onclick="deleteToken(this.id)">
                 </h5>
               </div>
               <div id="collapseThree" class="collapse" aria-labelledby="headingThree" data-parent="#accordion">
@@ -48,7 +53,35 @@
                 </div>
               </div>
             </div>
+
           </div>
         </div>
     </div>
 </div>
+
+{{!-- <script>
+$(document).ready(function(){
+  messaging.getToken().then(function(currentToken) {
+        if (currentToken) {
+          $.ajax({
+            type: "POST",
+            url: "/",
+            data: JSON.stringify({AppInstanceToken: currentToken}),
+            dataType: "json",
+            contentType: "application/json",
+            success: function(data){ 
+                console.log(data);
+            },
+            error: function(err){
+                console.log(err);
+            }
+          });
+        } else {
+            setTokenSentToServer(false);
+        }
+    }).catch(function(err) {
+        console.log('An error occurred while retrieving token. ', err);
+        setTokenSentToServer(false);
+    });
+});
+</script> --}}
