@@ -17,6 +17,10 @@ $("#sendNotification").submit(function(e){
     e.preventDefault();
     let title = $("[name='title']").val();
     let description = $("#description").val();
+    let token = $("#devices").val();
+    //TODO
+    //Здесь нельзя поставить messaging.getToken().then(f())
+    //потому что сначала выполнится ajax, потом Promise
     $.ajax({
         type:"POST",
         url:"https://fcm.googleapis.com/fcm/send",
@@ -26,7 +30,7 @@ $("#sendNotification").submit(function(e){
             "Authorization": "key= AAAA4uqYCxM:APA91bF7LEuHwG5-2obu_GJsJbMx0vtl_y-1ILsFGT8Isjpa1MQNykQ7YtICMKvDvzezzVnSbiB2POYqVJyqC9IZ7TDVCfXrniNnei8N3LcFzpsI2wrafPB2lHSUB9a0kqznK-E9GUdU"
         },
         data:JSON.stringify({
-            "to":"dq475XSZFhI:APA91bEfhtXgFMUn0ZD8UUrwOBZmaUb1e85Zr3pAf8-yH7_OoNhT0-30nR0acm0HUUiZPAWmQ1DWXoi77TLbeXORwB5eoq8BHIp2SchIEVSZiGHDTJ2i_uDvcJYcw2ldd5UTr4mThacw",
+            "to": token,//"dq475XSZFhI:APA91bEfhtXgFMUn0ZD8UUrwOBZmaUb1e85Zr3pAf8-yH7_OoNhT0-30nR0acm0HUUiZPAWmQ1DWXoi77TLbeXORwB5eoq8BHIp2SchIEVSZiGHDTJ2i_uDvcJYcw2ldd5UTr4mThacw",
             "notification": {
                 "title": title,
                 "body": description,
@@ -95,9 +99,7 @@ function sendTokenToServer(currentToken, id, forDelete) {
         contentType: "application/json",
         success: function(data){ 
             console.log(data);
-            if(forDelete){
-                $("#accordion").prepend("<p>"+data+"</p>");
-            }
+            $("#message-block").html("<p>"+data+"</p>");
         },
         error: function(err){
             console.log(err);
