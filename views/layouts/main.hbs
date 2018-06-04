@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="Push Subscription">
+    <meta name="author" content="Asantiel">
+    <script defer src="https://use.fontawesome.com/releases/v5.0.8/js/fontawesome.js"
+     integrity="sha384-7ox8Q2yzO/uWircfojVuCQOZl+ZZBg2D2J5nkpLqzH1HY0C1dHlTKIbpRz/LG23c" crossorigin="anonymous"></script>
+    <script src="https://www.gstatic.com/firebasejs/4.13.0/firebase.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/4.13.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/4.13.0/firebase-messaging.js"></script>
+    <script>
+            // Initialize Firebase
+            var config = {
+              apiKey: "AIzaSyDWWlR06szAtz2SqbOZ2u7saK-PgyG2UPg",
+              authDomain: "fcmwithappserver-3e1c8.firebaseapp.com",
+              databaseURL: "https://fcmwithappserver-3e1c8.firebaseio.com",
+              projectId: "fcmwithappserver-3e1c8",
+              storageBucket: "fcmwithappserver-3e1c8.appspot.com",
+              messagingSenderId: "974598441747"
+            };
+            firebase.initializeApp(config);
+    </script>
+    <title>FCM Push News</title>
+
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.13/css/all.css" integrity="sha384-DNOHZ68U8hZfKXOrtjWvjxusGo9WQnrNx2sqG0tfsghAvtVlRW3tvkXWZh58N9jp" crossorigin="anonymous">
+    <!-- Bootstrap core CSS -->
+    <link href="/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Custom styles for this template -->
+    <link href="/css/style.css" rel="stylesheet">
+  </head>
+
+  <body>
+
+    {{>menu}}
+
+    <main role="main" class="container">
+      {{{body}}}
+    </main><!-- /.container -->
+
+    <!-- Bootstrap core JavaScript-->
+    <script src="/js/jquery-3.3.1.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" 
+    integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="/js/bootstrap.min.js"></script>
+    <script src="/js/script.js"></script>
+  </body>
+</html>

@@ -1,3 +1,4 @@
+'use strict'
 // Callback fired if Instance ID token is updated.
 const messaging = firebase.messaging();
 messaging.usePublicVapidKey("BNnWxEZztbbtTN04VtO70CrtxJYeRdbruzeyitTymn8VYS5-JJAU65A9TJ-XH2EuhbvOy9KaDN1SNGrPskGY-Wo");
@@ -50,7 +51,7 @@ messaging.onMessage(function(payload){
     console.log('onMessage', payload);
 });
       
-retrieveToken = (id) => {
+function retrieveToken(id){
     messaging.requestPermission()
     .then(function() {
         console.log('Notification permission granted.');
@@ -71,16 +72,15 @@ retrieveToken = (id) => {
         console.log('An error occurred while retrieving token. ', err);
         setTokenSentToServer(false);
     });
-};
+}
 
-deleteToken = (id) => {
+function deleteToken(id){
     messaging.getToken().then(function(currentToken) {
         if (currentToken) {
             id = id.replace('Unsubscribe_', '');
             sendTokenToServer(currentToken, id, true);
         } else {
-            console.log('No Instance ID token available. Request permission to generate one.');
-            alert('Пожалуйста, разрешите отправлять вам уведомления');
+            alert('У нас нет разрешения отправлять вам уведомления.');
             setTokenSentToServer(false);
         }
     }).catch(function(err) {
@@ -93,7 +93,7 @@ function sendTokenToServer(currentToken, id, forDelete) {
     console.log('Sending token to server...');
     $.ajax({
         type: "POST",
-        url: forDelete?"/deleteToken":"/subscribe",
+        url: forDelete?"/push/unsubscribe":"/push/subscribe",
         data: JSON.stringify({AppInstanceToken: currentToken, subscribeId: id}),
         dataType: "json",
         contentType: "application/json",
