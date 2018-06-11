@@ -60,30 +60,3 @@
         </div>
     </div>
 </div>
-
-{{!-- <script>
-$(document).ready(function(){
-  messaging.getToken().then(function(currentToken) {
-        if (currentToken) {
-          $.ajax({
-            type: "POST",
-            url: "/",
-            data: JSON.stringify({AppInstanceToken: currentToken}),
-            dataType: "json",
-            contentType: "application/json",
-            success: function(data){ 
-                console.log(data);
-            },
-            error: function(err){
-                console.log(err);
-            }
-          });
-        } else {
-            setTokenSentToServer(false);
-        }
-    }).catch(function(err) {
-        console.log('An error occurred while retrieving token. ', err);
-        setTokenSentToServer(false);
-    });
-});
-</script> --}}

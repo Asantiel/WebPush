@@ -11,9 +11,23 @@ let urlencodedParser = bodyParser.urlencoded({extended: false});
 let app = express();
 app.get("/", function(request, response){
     MongoClientConnection.then(function(db){
+        let collection = db.collection("themes");
+        collection.find().toArray()
+        .then(function(result){
+            response.render('admin', {themes: result});
+        },
+        function(error)
+        {
+            response.render('admin', {err: error});
+        });
+    });
+});
+
+app.get("/send", function(request, response){
+    MongoClientConnection.then(function(db){
         let collection = db.collection("devices");
         collection.distinct("token").then(function(results){
-            response.render('admin', {devices: results});
+            response.render('sendToDevice', {devices: results});
         })
         .catch(reason=>console.log(reason));;
     });
@@ -37,8 +51,8 @@ app.post("/add", urlencodedParser, function(request, response){
                 return console.log(err);
             }
             console.log(result.ops);
-            message = "Тема успешно добавлена!";
-            response.json(message);
+            message = "Тема '" + theme.title + "' успешно добавлена!";
+            response.render('add', {message: message});
         });
     });
 });

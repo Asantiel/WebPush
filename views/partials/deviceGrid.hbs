@@ -1,0 +1,24 @@
+<div class="col-lg-12">
+{{#if err}}
+    <p>Возникла ошибка при отображении тем: {{err}}</p>
+{{else}}
+<table class="table">
+  <thead class="thead-dark">
+    <tr>
+      <th scope="col">#</th>
+      <th scope="col">Заголовок</th>
+      <th scope="col">Описание</th>
+    </tr>
+  </thead>
+  <tbody>
+    {{#each themes}}
+    <tr>
+      <th scope="row">1</th>
+      <td>{{this.title}}</td>
+      <td>{{this.description}}</td>
+    </tr>
+    {{/each}}
+  </tbody>
+</table>
+{{/if}}
+</div>

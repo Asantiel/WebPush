@@ -1,26 +1,10 @@
-<a href="/admin/add" style="float:right;"><button type="button" class="btn btn-danger btn-circle"><i class="fa fa-plus"></i></button></a>
-<div class="row">
-    <form id="sendNotification" name = "sendNotification" action="/send" method="POST">
-        <div class="form-group">
-            <label>Заголовок</label><br>
-            <input type="text" name="title" />
+{{!-- <a href="/admin/add" style="float:right;"><button type="button" class="btn btn-danger btn-circle"><i class="fa fa-plus"></i></button></a> --}}
+<div class="container">
+    <div class="row">
+        <div class="col-lg-12">
+<a href="/admin/add">Добавить тему</a><br>
+<a href="/admin/send">Отправить уведомление на устройство</a>
         </div>
-        <div class="form-group">
-            <label>Описание</label><br>
-            <input type="text" id="description" name="description"/><br>
-        </div>
-        <div class="form-group">
-            <div class="dropdown">
-               <div class="form-group">
-                    <label for="sel1">Подписанные устройства</label>
-                    <select class="form-control" id="devices">
-                        {{#each devices}}
-                            <option>{{this}}</option>
-                        {{/each}}
-                    </select>
-                </div>
-            </div>
-        </div>
-        <input type="submit" value="Send" class="btn btn-primary"/>
-    </form>
+        {{>deviceGrid}}
+    </div>
 </div>
