@@ -65,7 +65,6 @@ function retrieveToken(id){
             sendTokenToServer(currentToken, id, false);
         } else {
             console.log('No Instance ID token available. Request permission to generate one.');
-            alert('Пожалуйста, разрешите отправлять вам уведомления');
             setTokenSentToServer(false);
         }
     }).catch(function(err) {

@@ -1,6 +1,5 @@
-var express = require('express'),
-    MongoClient = require("mongodb").MongoClient;
-
+var express = require('express');
+ 
 var app = express();
 
 app.use("/", require("./web/app"));

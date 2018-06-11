@@ -1,6 +1,7 @@
 var express = require('express'),
     bodyParser = require('body-parser'),
-    MongoClient = require("mongodb").MongoClient;
+    MongoClient = require("mongodb").MongoClient,
+    XMLHttpRequest = require("xmlhttprequest").XMLHttpRequest;
 
 const connectionString = "mongodb://localhost:27017/test";
 const MongoClientConnection = MongoClient.connect(connectionString).catch(r => console.log(r));
@@ -43,6 +44,24 @@ app.post("/subscribe", jsonParser, function (request, response) {
                         return console.log(err);
                     }
                     console.log(result.ops);
+                    let xhr = new XMLHttpRequest();
+                    let url = "https://iid.googleapis.com/iid/v1/" + 
+                               request.body.AppInstanceToken + 
+                               "/rel/topics/" +
+                               request.body.subscribeId;
+                    xhr.open('POST', url, true);
+                    xhr.setRequestHeader('Content-Type', 'application/json');
+                    xhr.setRequestHeader('Authorization', 'key= AAAA4uqYCxM:APA91bF7LEuHwG5-2obu_GJsJbMx0vtl_y-1ILsFGT8Isjpa1MQNykQ7YtICMKvDvzezzVnSbiB2POYqVJyqC9IZ7TDVCfXrniNnei8N3LcFzpsI2wrafPB2lHSUB9a0kqznK-E9GUdU');
+                    xhr.send(); 
+                    xhr.onreadystatechange = () => {
+                        if (xhr.readyState != 4) return;
+
+                        if (xhr.status != 200) {
+                            console.log( xhr.status + ': ' + xhr.statusText ); // пример вывода: 404: Not Found
+                        } else {
+                            console.log( xhr.responseText ); // responseText -- текст ответа.
+                        } 
+                    };
                     message = "Подписка оформлена!";
                     response.json(message);
                 });

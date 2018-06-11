@@ -8,14 +8,20 @@
       <th scope="col">#</th>
       <th scope="col">Заголовок</th>
       <th scope="col">Описание</th>
+      <th></th>
     </tr>
   </thead>
   <tbody>
     {{#each themes}}
     <tr>
-      <th scope="row">1</th>
+      <th scope="row">{{math @index "+" 1}}</th>
       <td>{{this.title}}</td>
       <td>{{this.description}}</td>
+      <td>
+        <a href="/admin/edit/{{this._id}}">Редактировать</a> | 
+        <a href="/admin/delete/{{this._id}}">Удалить</a> | 
+        <a href="/admin/sendmultiple/{{this._id}}">Отправить уведомдение</a>
+      </td>
     </tr>
     {{/each}}
   </tbody>
