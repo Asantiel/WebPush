@@ -3,7 +3,7 @@ var express = require('express'),
     MongoClient = require("mongodb").MongoClient,
     XMLHttpRequest = require("xmlhttprequest").XMLHttpRequest;
 
-const connectionString = "mongodb://localhost:27017/test";
+const connectionString = process.env.MONGODB_URI || "mongodb://localhost:27017/test";
 const MongoClientConnection = MongoClient.connect(connectionString).catch(r => console.log(r));
 
 let app = express();
